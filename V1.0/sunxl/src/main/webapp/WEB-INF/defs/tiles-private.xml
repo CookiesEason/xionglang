@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+    <!-- easyUI后台模版 -->
+    <definition name="easyUIPrivateLayout" template="/WEB-INF/views/common/private/easyUIPrivateLayout.jsp">
+        <put-attribute name="title" value="XXX后台管理中心" />
+        <put-attribute name="header" value="/WEB-INF/views/common/private/header.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/views/common/private/footer.jsp" />
+    </definition>
+    <!-- 后台登陆 -->
+    <definition name="private.login" template="/WEB-INF/views/private/login/privateLogin.jsp" />
+    <definition name="private.lock.window" template="/WEB-INF/views/private/login/login.jsp" />
+    <!--修改密码 -->
+    <definition name="private.password" template="/WEB-INF/views/private/easyui-private/password.jsp" />
+    <!--修改角色 -->
+    <definition name="private.role" template="/WEB-INF/views/private/easyui-private/role.jsp" />
+    <!--修改角色 -->
+    <definition name="private.adminUser.info" template="/WEB-INF/views/private/adminUser/view.jsp" />
+    <!-- 后台用户控制页面 -->
+    <definition name="private.adminUser.list" template="/WEB-INF/views/private/adminUser/list.jsp" />
+    <definition name="private.adminUser.add" template="/WEB-INF/views/private/adminUser/add.jsp" />
+    <definition name="private.adminUser.update" template="/WEB-INF/views/private/adminUser/update.jsp" />
+    <definition name="private.adminUser.view" template="/WEB-INF/views/private/adminUser/view.jsp" />
+    <!-- 索引控制页面 -->
+    <definition name="private.idSequence.list" template="/WEB-INF/views/private/idsequence/list.jsp" />
+    <definition name="private.idSequence.add" template="/WEB-INF/views/private/idsequence/add.jsp" />
+    <definition name="private.idSequence.update" template="/WEB-INF/views/private/idsequence/update.jsp" />
+    <definition name="private.idSequence.view" template="/WEB-INF/views/private/idsequence/view.jsp" />
+    <!-- 菜单控制页面 -->
+    <definition name="private.menu.list" template="/WEB-INF/views/private/menu/list.jsp" />
+    <definition name="private.menu.add" template="/WEB-INF/views/private/menu/add.jsp" />
+    <definition name="private.menu.update" template="/WEB-INF/views/private/menu/update.jsp" />
+    <definition name="private.menu.view" template="/WEB-INF/views/private/menu/view.jsp" />
+    <!-- 角色控制页面 -->
+    <definition name="private.role.list" template="/WEB-INF/views/private/role/list.jsp" />
+    <definition name="private.role.add" template="/WEB-INF/views/private/role/add.jsp" />
+    <definition name="private.role.update" template="/WEB-INF/views/private/role/update.jsp" />
+    <definition name="privaterole.view" template="/WEB-INF/views/private/role/view.jsp" />
+    <!-- 系统来源控制页面 -->
+    <definition name="private.sysTidData.list" template="/WEB-INF/views/private/sysTidData/list.jsp" />
+    <definition name="private.sysTidData.add" template="/WEB-INF/views/private/sysTidData/add.jsp" />
+    <definition name="private.sysTidData.update" template="/WEB-INF/views/private/sysTidData/update.jsp" />
+    <definition name="private.sysTidData.view" template="/WEB-INF/views/private/sysTidData/view.jsp" />
+    <!-- 导数方案控制页面 -->
+    <definition name="private.importData.list" template="/WEB-INF/views/private/importData/list.jsp" />
+    <definition name="private.importData.add" template="/WEB-INF/views/private/importData/add.jsp" />
+    <definition name="private.importData.update" template="/WEB-INF/views/private/importData/update.jsp" />
+    <definition name="private.importData.view" template="/WEB-INF/views/private/importData/view.jsp" />
+    <!-- 导数配置控制页面 -->
+    <definition name="private.importDataInfo.list" template="/WEB-INF/views/private/importDataInfo/list.jsp" />
+    <definition name="private.importDataInfo.add" template="/WEB-INF/views/private/importDataInfo/add.jsp" />
+    <definition name="private.importDataInfo.update" template="/WEB-INF/views/private/importDataInfo/update.jsp" />
+    <definition name="private.importDataInfo.view" template="/WEB-INF/views/private/importDataInfo/view.jsp" />
+    <!-- 导数表字段控制页面 -->
+    <definition name="private.importDataColm.list" template="/WEB-INF/views/private/importDataColm/list.jsp" />
+    <definition name="private.importDataColm.add" template="/WEB-INF/views/private/importDataColm/add.jsp" />
+    <definition name="private.importDataColm.update" template="/WEB-INF/views/private/importDataColm/update.jsp" />
+    <definition name="private.importDataColm.view" template="/WEB-INF/views/private/importDataColm/view.jsp" />
+    <!-- 卸数方案控制页面 -->
+    <definition name="private.exportData.list" template="/WEB-INF/views/private/exportData/list.jsp" />
+    <definition name="private.exportData.add" template="/WEB-INF/views/private/exportData/add.jsp" />
+    <definition name="private.exportData.update" template="/WEB-INF/views/private/exportData/update.jsp" />
+    <definition name="private.exportData.view" template="/WEB-INF/views/private/exportData/view.jsp" />
+    <!-- 卸数配置控制页面 -->
+    <definition name="private.exportDataInfo.list" template="/WEB-INF/views/private/exportDataInfo/list.jsp" />
+    <definition name="private.exportDataInfo.add" template="/WEB-INF/views/private/exportDataInfo/add.jsp" />
+    <definition name="private.exportDataInfo.update" template="/WEB-INF/views/private/exportDataInfo/update.jsp" />
+    <definition name="private.exportDataInfo.view" template="/WEB-INF/views/private/exportDataInfo/view.jsp" />
+     <!-- 卸数配置控制页面 -->
+    <definition name="private.sysData.list" template="/WEB-INF/views/private/sysData/list.jsp" />
+    <definition name="private.sysData.add" template="/WEB-INF/views/private/sysData/add.jsp" />
+    <definition name="private.sysData.update" template="/WEB-INF/views/private/sysData/update.jsp" />
+    <definition name="private.sysData.view" template="/WEB-INF/views/private/sysData/view.jsp" />  
+</tiles-definitions>

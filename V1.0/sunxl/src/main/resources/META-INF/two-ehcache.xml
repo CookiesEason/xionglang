@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" name="twoEhcacheDefault" updateCheck="false">
+    <diskStore path="java.io.tmpdir" />
+    <defaultCache maxElementsInMemory="100" eternal="false" timeToIdleSeconds="600" timeToLiveSeconds="1200" overflowToDisk="false" diskPersistent="false" diskExpiryThreadIntervalSeconds="120" statistics="false" />
+    <cache name="org.hibernate.cache.internal.StandardQueryCache" maxEntriesLocalHeap="5" eternal="false" timeToLiveSeconds="120" />
+    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache" maxEntriesLocalHeap="1000" eternal="true" />
+    <cache name="baseCache" eternal="false" maxElementsInMemory="500" overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0" timeToLiveSeconds="300" memoryStoreEvictionPolicy="LFU" />
+</ehcache>

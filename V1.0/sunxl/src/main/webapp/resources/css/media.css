@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+
+.media {
+	border: 1px solid #000;
+	margin: 0 auto
+}
+
+@media screen and (max-width: 1920px) {
+	.media {
+		width: 1920px
+	}
+}
+
+@media screen and (max-width: 1600px) {
+	.media {
+		width: 1600px
+	}
+}
+
+@media screen and (max-width: 1400px) {
+	.media {
+		width: 1400px
+	}
+}
+
+@media screen and (max-width: 1366px) {
+	.media {
+		width: 1366px
+	}
+}
+
+@media screen and (max-width: 1280px) {
+	.media {
+		width: 1280px;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.media {
+		width: 1024px;
+	}
+}
+/* 设置了浏览器宽度不大于500px时 abc 显示100px宽度 */
