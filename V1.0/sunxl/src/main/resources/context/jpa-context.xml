@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+			http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+    <!--开启@Transactional注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <!-- 注入bean @Component、@Controller、@Service、@Repository -->
+    <!-- 注入beas层 -->
+    <context:component-scan base-package="com.sunxl.base.controller" />
+    <context:component-scan base-package="com.sunxl.base.service" />
+    <context:component-scan base-package="com.sunxl.base.dao" />
+    <!-- 注入前台 -->
+    <context:component-scan base-package="com.sunxl.publics.controller" />
+    <context:component-scan base-package="com.sunxl.publics.service" />
+    <context:component-scan base-package="com.sunxl.publics.dao" />
+    <!-- 注入后台 -->
+    <context:component-scan base-package="com.sunxl.privates.controller" />
+    <context:component-scan base-package="com.sunxl.privates.service" />
+    <context:component-scan base-package="com.sunxl.privates.dao" />
+    <!-- 拦截器注入 -->
+    <context:component-scan base-package="com.sunxl.base.interceptor" />
+    <!-- 测试注入 -->
+    <context:component-scan base-package="com.sunxl.test.controller" />
+    <context:component-scan base-package="com.sunxl.test.service" />
+    <context:component-scan base-package="com.sunxl.test.dao" />
+    <!-- 读取的配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations"><!-- 单个配置文件使用location，且不用使用list，多个配置文件使用locations -->
+            <list>
+                <value>classpath:/META-INF/system.properties</value>
+                <value>classpath:/META-INF/dataSource.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8" />
+    </bean>
+    <!-- 配置事务异常封装 -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    <!-- 设置解析velocity的视图 -->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value> resource.loader=class class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader</value>
+        </property>
+    </bean>
+    <!-- 启动对@AspectJ注解的支持 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- 支持文件图片等的上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    <!--创建数据源1，连接数据库dataSource1 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${Mysql.sunxl.driverClass}" />
+        <property name="jdbcUrl" value="${Mysql.sunxl.jdbcurl}" />
+        <property name="user" value="${Mysql.sunxl.user}" />
+        <property name="password" value="${Mysql.sunxl.password}" />
+    </bean>
+    <!--创建数据源2，连接数据库dataSource2 -->
+    <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${Mysql.test.driverClass}" />
+        <property name="jdbcUrl" value="${Mysql.test.jdbcurl}" />
+        <property name="user" value="${Mysql.test.user}" />
+        <property name="password" value="${Mysql.test.password}" />
+    </bean>
+    <!-- 使用自定义的数据源 -->
+    <bean id="dataSourceAspect" class="com.sunxl.base.dao.handover.DataSourceAspect" />
+    <!-- 面向切面拦截所有service方法 -->
+    <aop:config>
+        <aop:aspect ref="dataSourceAspect">
+            <aop:pointcut id="dataSourcePointcut" expression="execution(* com.sunxl.*.service.*.*(..))" />
+            <aop:before pointcut-ref="dataSourcePointcut" method="intercept" />
+        </aop:aspect>
+    </aop:config>
+    <!-- persistenceProvider接口的一种实现非必须 -->
+    <bean id="persistenceProvider" class="org.hibernate.ejb.HibernatePersistence" />
+    <!-- 厂商JPA的一种特定规则非必须 -->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="false" />
+        <property name="database" value="HSQL" />
+    </bean>
+    <!-- JPA的特定规范非必须 -->
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+    <!-- 生成实体工厂类 -->
+    <!-- *************************************开始创建第一个工厂类*************************************** -->
+    <!-- 定义第一个工厂类，工厂类默认使用的id名称为entityManagerFactory，如果修改，其余的使用都需要指定工厂名，如在web.xml中使用了 -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="MYSQLONE" /><!-- jpa定义的名称 -->
+        <property name="persistenceXmlLocation" value="classpath:/META-INF/one-persistence.xml" /><!-- jpa定义的路径 -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="persistenceProvider" ref="persistenceProvider" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaDialect" ref="jpaDialect" />
+        <property name="jpaProperties"><!-- jpa配置 -->
+            <props>
+                <prop key="hibernate.dialect">${Mysql.sunxl.dialect}</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+                <prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
+                <prop key="javax.persistence.query.timeout">20000</prop>
+                <prop key="javax.persistence.lock.timeout">5000</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">classpath:/META-INF/one-ehcache.xml</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="jpa.showSql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 开启控制层和视图层的延时加载功能,主要针对实体类中存在@ManyToMany(fetch = FetchType.LAZY)懒加载注解的实体类 -->
+    <bean id="jpaInterceptor" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+        <property name="persistenceUnitName" value="MYSQLONE" />
+    </bean>
+    <!-- 配置事物管理，默认使用transactionManager，如果没有，其余的使用都需要指定事物 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    <!-- *****************************************完成第一个工厂类************************************* -->
+    <!-- *************************************开始创建第二个工厂类*************************************** -->
+    <bean id="entityManagerFactory1" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="MYSQLTWO" /><!-- jpa定义的名称 -->
+        <property name="persistenceXmlLocation" value="classpath:/META-INF/two-persistence.xml" /><!-- jpa定义的路径 -->
+        <property name="dataSource" ref="dataSource1" />
+        <property name="persistenceProvider" ref="persistenceProvider" />
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaDialect" ref="jpaDialect" />
+        <property name="jpaProperties"><!-- jpa配置 -->
+            <props>
+                <prop key="hibernate.dialect">${Mysql.sunxl.dialect}</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+                <prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
+                <prop key="javax.persistence.query.timeout">20000</prop>
+                <prop key="javax.persistence.lock.timeout">5000</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">classpath:/META-INF/two-ehcache.xml</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="jpa.showSql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 开启控制层和视图层的延时加载功能,主要针对实体类中存在@ManyToMany(fetch = FetchType.LAZY)懒加载注解的实体类 -->
+    <bean id="jpaInterceptor1" class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+        <property name="persistenceUnitName" value="MYSQLONE" />
+    </bean>
+    <!-- 配置事物管理，默认使用transactionManager，如果没有，其余的使用都需要指定事物 -->
+    <bean id="transactionManager1" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory1" />
+    </bean>
+    <!-- *****************************************完成第二个工厂类************************************* -->
+    <!-- 开启映射并注入延时加载 -->
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="jpaInterceptor" />
+                <ref bean="jpaInterceptor1" />
+            </list>
+        </property>
+    </bean>
+    <!-- <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" /> 数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher" /> 缓存管理 <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" 
+        /> 使用Shiro自带的JdbcRealm类 指定密码匹配所需要用到的加密对象 指定存储用户、角色、权限许可的数据源及相关查询语句 <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm"> <property name="credentialsMatcher" ref="credentialsMatcher" /> <property name="permissionsLookupEnabled" value="true" /> <property name="dataSource" ref="dataSource" 
+        /> <property name="authenticationQuery" value="SELECT password FROM sec_user WHERE user_name = ?" /> <property name="userRolesQuery" value="SELECT role_name from sec_user_role left join sec_role using(role_id) left join sec_user using(user_id) WHERE user_name = ?" /> <property name="permissionsQuery" 
+        value="SELECT permission_name FROM sec_role_permission left join sec_role using(role_id) left join sec_permission using(permission_id) WHERE role_name = ?" /> </bean> Shiro安全管理器 <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager"> <property name="realm" ref="jdbcRealm" 
+        /> <property name="cacheManager" ref="cacheManager" /> </bean> Shiro主过滤器本身功能十分强大，其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 Web应用中，Shiro可控制的Web请求必须经过Shiro主过滤器的拦截，Shiro对基于Spring的Web应用提供了完美的支持 <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean"> Shiro的核心安全接口，这个属性是必须的 <property name="securityManager" 
+        ref="securityManager" /> 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 <property name="loginUrl" value="/login" /> 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) <property name="successUrl" value="/" ></property> 用户访问未对其授权的资源时，所显示的连接 <property name="unauthorizedUrl" value="/" /> <property 
+        name="filterChainDefinitions"> <value> /login/*=anon </value> </property> </bean> 开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类， 并在必要时进行安全逻辑验证 <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" /> <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> 
+        <property name="securityManager" ref="securityManager" /> </bean> -->
+</beans>
