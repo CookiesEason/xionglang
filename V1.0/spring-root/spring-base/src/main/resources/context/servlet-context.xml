@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task  
+        http://www.springframework.org/schema/task/spring-task-4.3.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--当返回值是String时触发进行一定的操作，如这里的设置编码 -->
+    <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <!-- 设置String返回值的编码 -->
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 但返回值是JSON类型的字符串时触发进行一定的操作，如这里的设置编码，默认值转JSON -->
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <!-- 设置JSON字符串的返回值的编码 -->
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 开启title布局功能 -->
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView" />
+    </bean>
+    <!-- mvc注解，返回值类型，可以返回json格式和string格式,当后台的内容符合json格式的字符串时MappingJackson2HttpMessageConverter会把其编译成UTF-8格式的json字符串，否则为UTF-8格式的字符串 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <ref bean="stringConverter" />
+            <ref bean="jsonConverter" />
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- mvc过滤器过滤静态资源访问 -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <!-- 开启定时器注解 -->
+    <task:annotation-driven />
+    <!-- 建议注解的bean用servlet扫描注入，因为如果在spring和servelt中都注入了一份bean，1、它其实生成的是2份实例，web容易会优先使用servlet容器的实例；2、如果生成2份实例，让费空间；3、如果只使用spring生成实例，因为spring中生成的实例只会交给spring使用，也就是只会交给@Component、@Controller、@Service、@Repository等等开启了上述注解的对象使用，别的对象就用不了了，如拦截器，而Servlet是管理跳转的，也就是所有的跳转操作也都可以使用Servlet里面的对象，拦截器其实也是跳转的一部分，当让也可以使用Servlet里面的实例。综上所述，建议把实例交于Servlet管理 -->
+    <!-- 注入bean @Component、@Controller、@Service、@Repository -->
+    <!--spring定时器注解扫描 -->
+    <context:component-scan base-package="com.base.task" />
+    <!--spring拦截器注解扫描 -->
+    <context:component-scan base-package="com.base.interceptor" />
+    <!-- 注入后台控制层 -->
+    <context:component-scan base-package="com.privates.controller" />
+    <!-- 注入beas控制层 -->
+    <context:component-scan base-package="com.base.controller" />
+    <!-- 注入前台控制层 -->
+    <context:component-scan base-package="com.publics.controller" />
+    <!-- 注入service层 -->
+    <context:component-scan base-package="com.base.service" />
+    <!-- 注入dao层 -->
+    <context:component-scan base-package="com.base.dao" />
+    <!-- 注入拦截器 -->
+    <context:component-scan base-package="com.base.aspect" />
+    <!-- 启动对@AspectJ注解的支持 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- 面向切面拦截所有service方法 -->
+    <!-- 使用自定义的数据源 -->
+    <!-- <bean id="serviceAspect" class="com.sunxl.base.aspect.ServiceAspect" /> <aop:config proxy-target-class="true"> <aop:aspect ref="serviceAspect"> <aop:pointcut id="beforeAspectPointcut" expression="execution(* com.sunxl.*.service.*.*(..))" /> <aop:pointcut id="afterAspectPointcut" expression="execution(* 
+        com.sunxl.*.service.*.*(..))" /> <aop:before pointcut-ref="beforeAspectPointcut" method="beforeAspect" /> <aop:after pointcut-ref="afterAspectPointcut" method="afterAspect"/> </aop:aspect> </aop:config> -->
+    <!-- mvc定义拦截器 -->
+    <!-- 拦截器的定一个规则,必须实现HandlerInterceptor接口，次拦截其需要实现3个方法，但如果想要拦截器初始化完成之后就只执行一次的方法可以实现InitializingBean接口，具体写法参照AdminPowerInterceptor拦截器 -->
+    <mvc:interceptors>
+        <!-- 普通拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.base.interceptor.PowerInterceptor" />
+        </mvc:interceptor>
+        <!-- 后台登录拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/private/**" />
+            <bean class="com.base.interceptor.AdminPowerInterceptor" />
+        </mvc:interceptor>
+        <!-- 初始化数据拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/initData/**" />
+            <bean class="com.base.interceptor.InitDataInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- 开启title标签访问 -->
+    <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/defs/tiles-base-public.xml</value>
+                <value>/WEB-INF/defs/tiles-base-private.xml</value>
+                <value>/WEB-INF/defs/tiles-base-schedule.xml</value>
+            </list>
+        </property>
+    </bean>
+</beans>

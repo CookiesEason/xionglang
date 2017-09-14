@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
+http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
+    <persistence-unit name="MYSQLONE" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.base.one.entity.AdminUser</class>
+        <class>com.base.one.entity.CheckCode</class>
+        <class>com.base.one.entity.Dynamic</class>
+        <class>com.base.one.entity.LogInfo</class>
+        <class>com.base.one.entity.Menu</class>
+        <class>com.base.one.entity.Company</class>
+        <class>com.base.one.entity.Dept</class>
+        <class>com.base.one.entity.Resource</class>
+        <class>com.base.one.entity.Role</class>
+        <class>com.base.one.entity.User</class>
+        <class>com.base.one.entity.IdSequence</class>
+        <class>com.base.one.entity.SysData</class>
+        <class>com.base.one.entity.MenuToRole</class>
+        <class>com.base.one.entity.UserToRole</class>
+        <class>com.base.one.entity.AdminUserToRole</class>
+        <class>com.base.one.entity.ExportData</class>
+        <class>com.base.one.entity.ExportDataInfo</class>
+        <class>com.base.one.entity.ImportData</class>
+        <class>com.base.one.entity.ImportDataColm</class>
+        <class>com.base.one.entity.ImportDataInfo</class>
+        <class>com.base.one.entity.SysTidData</class>
+        <class>com.base.one.entity.ExportToExportInfo</class>
+        <class>com.base.one.entity.ImportToImportInfo</class>
+        <class>com.base.one.entity.InstationMessage</class>
+        <class>com.base.one.entity.InstationToPerson</class>
+        <class>com.base.one.entity.ScheduleStatus</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+    </persistence-unit>
+</persistence>

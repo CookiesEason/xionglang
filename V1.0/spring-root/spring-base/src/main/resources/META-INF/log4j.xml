@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <!-- 打印到控制台 -->
+    <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+        </layout>
+    </appender>
+    <!-- 打印到文件 -->
+    <appender name="DailyRollingFileAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="Append" value="true" />
+        <!-- <param name="MaxFileSize" value="3KB" /> -->
+        <param name="File" value="D:/eclipse/sunxl/src/main/webapp/WEB-INF/log/log4j.log" />
+        <!-- <param name="MaxBackupIndex" value="3" /> -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd hh:mm:ss}:%p %t %c - %m%n" />
+        </layout>
+    </appender>
+    <!-- 打印到数据库 -->
+    <!-- <appender name="JDBCAppender" class="org.apache.log4j.jdbc.JDBCAppender"> <param name="URL" value="jdbc:oracle:thin:@127.0.0.1:1521:mumu" /> <param name="user" value="liulibo" /> <param name="password" value="liulibo" /> <param name="driver" value="oracle.jdbc.driver.OracleDriver" /> <layout 
+        class="org.apache.log4j.PatternLayout"> <param name="ConversionPattern" value="insert into log4j(createdate,thread,level_,class,message) values(\'%d\',\'%t\',\'%-5p\',\'%c\',\'%m\')" /> </layout> </appender> -->
+    <!-- 3rdparty Loggers -->
+    <logger name="com.sunxl">
+        <level value="WARN" />
+    </logger>
+    <logger name="org.hibernate">
+        <level value="ERROR" />
+    </logger>
+    <logger name="org.springframework">
+        <level value="ERROR" />
+    </logger>
+    <logger name="org.apache">
+        <level value="ERROR" />
+    </logger>
+    <logger name="net.sf">
+        <level value="ERROR" />
+    </logger>
+    <logger name="com.mchange">
+        <level value="ERROR" />
+    </logger>
+    <logger name="org.jboss">
+        <level value="ERROR" />
+    </logger>
+    <logger name="jdbc.audit">
+        <level value="ERROR" />
+    </logger>
+    <logger name="jdbc.sqlonly">
+        <level value="ERROR" />
+    </logger>
+    <logger name="log4jdbc.debug">
+        <level value="ERROR" />
+    </logger>
+    <logger name="jdbc.connection">
+        <level value="ERROR" />
+    </logger>
+    <logger name="jdbc.sqltiming">
+        <level value="DEBUG" />
+    </logger>
+    <!-- Root Logger -->
+    <root>
+        <priority value="DEBUG" />
+        <appender-ref ref="ConsoleAppender" />
+        <appender-ref ref="DailyRollingFileAppender" />
+        <!-- <appender-ref ref="JDBCAppender" /> -->
+    </root>
+</log4j:configuration>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    version="2.5">
+    <!-- 初始化优先级 web容器启动，加载ServletConfig对象，也就是把web.xml的配置信息对入ServletConfig>加载监听(多个监听从上往下加载)Listener>加载过滤器(多个过滤器加载顺序，从下往上加载，过滤器触发doFilter方法是在request访问的时候，它的访问顺序跟加载顺序刚好相反，是从上往下过滤的)Filter>servlet -->
+    <!-- 初始化加载spring的配置文件,servlet默认加载的servlet-context.xml路径为/WEB-INF/servlet-context.xml -->
+    <!-- spring加载时会使用静态常量contextConfigLocation名 ，如果不存在这个名，则默认查找/WEB-INF/applicationContext.xml -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:/context/root-context.xml</param-value>
+    </context-param>
+    <!-- 设置由Sprng载入的Log4j配置文件位置，名字源码中已定，原理一样 -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:/META-INF/log4j.xml</param-value>
+    </context-param>
+    <!-- Spring刷新Log4j配置文件变动的间隔,单位为毫秒，名字源码中已定，原理一样 -->
+    <context-param>
+        <param-name>log4jRefreshInterval</param-name>
+        <param-value>10000</param-value>
+    </context-param>
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>tansungWeb.root</param-value>
+    </context-param>
+    <!-- 启动spring监听，加载spring信息，注入spring工厂和bean，实现ServletContextListener监听，监听servlet启动和销毁 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 启动log4j监听，加载log4j信息，实现ServletContextListener监听，监听servlet启动和销毁 -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
+    </listener>
+    <!-- 自定义的监听，根据实际情况实现，所有的监听都集成EventListener -->
+    <listener>
+        <listener-class>com.base.listener.CountListener</listener-class>
+    </listener>
+    <!-- <filter> <filter-name>shiroFilter</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> <init-param> <param-name>targetFilterLifecycle</param-name> <param-value>true</param-value> </init-param> </filter> -->
+    <!-- 过滤视图层和控制层的懒加载 -->
+    <!-- 过滤器加载原则，实现Filter接口，生命周期类似Servlet,启动服务器，初始化Filter的init方法(跟Servlet不同的地方),每次请求执行doFilter方法,停止服务器调用destroy方法，遵循上述规则，可以自写过滤器 -->
+    <filter>
+        <filter-name>ReuestFilter</filter-name>
+        <filter-class>com.base.filters.ReuestFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SpringOpenEntityManagerInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <!-- <filter-mapping> <filter-name>shiroFilter</filter-name> <servlet-name>appServlet</servlet-name> </filter-mapping> -->
+    <filter-mapping>
+        <filter-name>ReuestFilter</filter-name>
+        <servlet-name>appServlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <servlet-name>appServlet</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SpringOpenEntityManagerInViewFilter</filter-name>
+        <servlet-name>appServlet</servlet-name>
+    </filter-mapping>
+    <!-- Servlet加载原则，实现Servlet接口，生命周期为,启动服务器，第一次使用Servlet对象，初始化Servlet的init方法,每次请求执行service方法,停止服务器调用destroy方法，遵循上述规则，可以自写Servelt -->
+    <servlet>
+        <servlet-name>appServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- servlet初始化加载的配置文件，此份配置文件可以写入前面监听加载的配置文件中,因为它最终调用的方法也是spring监听调用的方法，但如果没有init-param设置，当执行init方法时，会默认查找/WEB-INF/servlet名-servlet.xml配置文件，如果不存在，servlet初始化就不正常，所以最好还是加上，且让其在web容器启动时加载init方法 -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:/context/servlet-context.xml</param-value>
+        </init-param>
+        <!-- 大于等于0，启动web容器时，执行一次初始化操作，小于0或不存在，则只是实现Servlet,还未执行init方法(是否在web容器启动时执行init方法) -->
+        <!-- java多继承实现，执行子类实现方法，如DispatcherServlet继承FrameworkServlet,FrameworkServlet继承HttpServletBean，在HttpServletBean中存在init的实现，在其余的子类都不存在，在init方法中有initServletBean，在HttpServletBean合FrameworkServlet中都有此方法，但实现的具体对象为DispatcherServlet，当本类中不存在该方法时，找父类，父类中不存在，找爷爷类，一级一级网上找，直到找到，就执行，所以此处执行的是DispatcherServlet类的父类HttpServletBean中的initServletBean方法 -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- <filter-mapping> <filter-name>ReuestFilter</filter-name> <servlet-name>appServlet</servlet-name> </filter-mapping> -->
+    <servlet-mapping>
+        <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <description>会话超时时间间隔（单位:分钟）</description>
+    <session-config>
+        <session-timeout>15</session-timeout>
+    </session-config>
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://www.sunxl.net/jsp/sunxl/core</taglib-uri>
+            <taglib-location>/WEB-INF/tld/sunxl.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+</web-app>

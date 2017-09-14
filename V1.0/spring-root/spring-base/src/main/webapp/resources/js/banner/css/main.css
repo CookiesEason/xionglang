@@ -1,0 +1,336 @@
+.index_bg01 {
+    background: url(../img/banner_bg01.gif) repeat-x 0px 117px;
+}
+
+.index_bg02 {
+    background: url(../img/banner_bg02.gif) repeat-x 0px 117px
+}
+
+.index_bg03 {
+    background: url(../img/banner_bg03.gif) repeat-x 0px 117px
+}
+
+.index_bg04 {
+    background: url(../img/banner_bg04.gif) repeat-x 0px 117px
+}
+
+.index_bg05 {
+    background: url(../img/banner_bg05.gif) repeat-x 0px 117px
+}
+
+#warp {
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    PADDING-LEFT: 0px;
+    WIDTH: 100%;
+    PADDING-RIGHT: 0px;
+    HEIGHT: 399px;
+    PADDING-TOP: 0px;
+}
+
+.banner {
+    Z-INDEX: 99;
+    MARGIN: 0px auto;
+    WIDTH: 1200px;
+    HEIGHT: 399px;
+    _width: 1200px
+}
+
+.banner_l {
+    MARGIN-TOP: 147px;
+    WIDTH: 23px;
+    FLOAT: left
+}
+
+.banner_r {
+    MARGIN-TOP: 147px;
+    WIDTH: 23px;
+    FLOAT: left
+}
+
+.bannerImg {
+    POSITION: relative;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    PADDING-LEFT: 0px;
+    WIDTH: 925px;
+    PADDING-RIGHT: 0px;
+    FLOAT: left;
+    PADDING-TOP: 0px
+}
+
+.bannerImg .bannerPage {
+    POSITION: absolute;
+    TOP: 340px;
+    LEFT: 480px
+}
+
+.bannerImg .bannerPage A {
+    MARGIN-RIGHT: 2px
+}
+
+.bannerImg .bannerPage A IMG {
+    VERTICAL-ALIGN: middle
+}
+
+.slides_container {
+    POSITION: relative;
+    WIDTH: 1200;
+    OVERFLOW: hidden
+}
+
+.pagination {
+    MARGIN: 26px auto 0px
+}
+
+.pagination LI {
+    MARGIN: 0px 1px;
+    FLOAT: left
+}
+
+.pagination LI A {
+    background: url(../img/pagination.png);
+    WIDTH: 15px;
+    DISPLAY: block;
+    BACKGROUND-POSITION: 0px -1px;
+    FLOAT: left;
+    HEIGHT: 0px;
+    OVERFLOW: hidden;
+    PADDING-TOP: 12px;
+}
+
+.pagination LI.current A {
+    BACKGROUND-POSITION: 0px -18px;
+}
+
+<!--
+首页的底部样式添加新外层容器-->.footer_box {
+    width: 100%;
+    height: 390px;
+    background: url(../img/footer_bg_1x390.png) 0 top repeat-x;
+}
+
+.rslides {
+    position: relative;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    height: 399px;
+}
+
+.rslides li {
+    -webkit-backface-visibility: hidden;
+    position: absolute;
+    display: none;
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 399px;
+}
+
+.rslides li:first-child {
+    position: relative;
+    display: block;
+    float: left;
+}
+
+.rslides li a {
+    display: block;
+    width: 1000px;
+    margin: 0 auto
+}
+
+.rslides img {
+    visibility: hidden
+}
+
+.slide_container {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 399px;
+}
+
+.slide {
+    position: relative;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.slide li {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.slide img {
+    display: block;
+    position: relative;
+    z-index: 1;
+    height: auto;
+    width: 100%;
+    border: 0;
+}
+
+.slide .caption {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    font-size: 20px;
+    text-shadow: none;
+    color: #fff;
+    background: #000;
+    background: rgba(0, 0, 0, .8);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 20px;
+    margin: 0;
+    max-width: none;
+}
+
+.slide_nav {
+    position: absolute;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    top: 52%;
+    left: 0;
+    opacity: 0.7;
+    z-index: 3;
+    text-indent: -9999px;
+    overflow: hidden;
+    text-decoration: none;
+    height: 61px;
+    width: 38px;
+    background: transparent url("../images/themes.gif") no-repeat left top;
+    margin-top: -45px;
+}
+
+.slide_nav:active {
+    opacity: 1.0;
+}
+
+.slide_nav.next {
+    left: auto;
+    background-position: right top;
+    right: 0;
+}
+/* 首页幻灯片begin */
+.slider {
+    position: relative;
+    height: 399px;
+    z-index: 0;
+    width: 100%;
+}
+
+.slider-img {
+    z-index: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 399px;
+}
+
+.slider-img li {
+    height: 399px;
+    -webkit-backface-visibility: hidden;
+    position: absolute;
+    display: none;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.slider-img li:first-child {
+    position: relative;
+    display: block;
+    float: left;
+}
+
+.slider-img li a {
+    display: block;
+    width: 1000px;
+    margin: 0 auto
+}
+
+.slider-img li img {
+    visibility: hidden
+}
+/*.indexSlide_tabs{ position: relative; *position: absolute; *left:0; margin: 0 auto; margin-top: -20px; height:20px; width:160px; z-index:10;}*/
+.indexSlide_tabs {
+    position: relative;
+    *position: absolute;
+    margin: -20px auto 0;
+    width: 300px;
+    height: 20px;
+    z-index: 10;
+    text-align: center;
+    float: left;
+}
+
+.indexSlide_tabs li {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    height: 12px;
+    width: 12px;
+    line-height: 12px;
+    margin: 0 5px;
+    z-index: 10;
+}
+/*.indexSlide_tabs li{ display:block; float: left; height:12px; width:12px;line-height:12px; margin:0 5px; z-index:10;}*/
+.indexSlide_tabs li a {
+    display: block;
+    float: left;
+    height: 12px;
+    width: 12px;
+    text-indent: -9999px;
+    line-height: 12px;
+    z-index: 10;
+    border-radius: 12px;
+    background: #ddd;
+}
+
+.indexSlide_tabs li a:hover {
+    background: #003366;
+}
+
+li.indexSlide_here a {
+    background: #003366;
+}
+
+.indexSlide_nav {
+    display: none;
+    position: absolute;
+    top: 38%;
+    width: 40px;
+    height: 70px;
+    background: blue;
+    z-index: 10;
+    text-indent: -9999px;
+}
+
+.slider:hover .indexSlide_nav {
+    display: block;
+}
+
+.slider .indexSlide_nav:hover {
+    opacity: 1;
+}
+
+.slider .prev {
+    left: 50px;
+    background: url(../img/prev.png) no-repeat;
+    opacity: 0.8;
+}
+
+.slider .next {
+    right: 50px;
+    background: url(../img/next.png) no-repeat;
+    opacity: 0.8;
+}
+/* 首页幻灯片end */
